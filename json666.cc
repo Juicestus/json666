@@ -1,29 +1,26 @@
+// EVIL JSON EMITTER (json666)
+//
 // Single header file JSON emitter library, designed to
-// be used as a Git submodule. This code is super evil! 
+// be used as a Git submodule. This code is super evil!
 // This should be inside SatanLib because it's so evil!
-
+//
 // Author: The Devil <devil@hell.com>
 // Author: Justus Languell <jus@justusl.com>
-
+//
 // Eventually, I am going to rewrite it to be even more
 // better and even more evil! Reference for the future.
 // http://coliru.stacked-crooked.com/a/a5902693e51b59b9
 
-
-#ifndef _COMPILER_JSON_H_
-#define _COMPILER_JSON_H_
+#ifndef __JSON_666_H__ 
+#define __JSON_666_H__
 
 #include <algorithm>
-#include <cstdlib>
-#include <filesystem>
-#include <format>
-#include <fstream>
 #include <iostream>
 #include <map>
-#include <sstream>
-#include <stdexcept>
 #include <string>
 #include <vector>
+
+namespace JSON666 {
 
 class JSON;
 
@@ -32,23 +29,23 @@ class JSONNode {
     virtual JSON* ToJSON(void) = 0;
 };
 
-#define __REGISTER_ADD_FUNC(T, E)                                                                             \
-  private:                                                                                         \
-    inline std::string _encode(T x) {                                                                     \
-        return E;                                                                                  \
-    }                                                                                              \
-                                                                                                   \
-  public:                                                                                          \
-    inline JSON* Add(const std::string& k, T v) {                                                         \
-        object.insert({k, _encode(v)});                                                            \
-        return this;                                                                               \
-    }                                                                                              \
-    inline JSON* Add(const std::string& k, std::vector<T> v) {                                            \
-        std::string a = "[";                                                                       \
-        for (T l : v) a += _encode(l) + ",";                                                       \
-        a.pop_back();                                                                              \
-        object.insert({k, a + "]"});                                                               \
-        return this;                                                                               \
+#define __REGISTER_ADD_FUNC(T, E)                                              \
+  private:                                                                     \
+    inline std::string _encode(T x) {                                          \
+        return E;                                                              \
+    }                                                                          \
+                                                                               \
+  public:                                                                      \
+    inline JSON* Add(const std::string& k, T v) {                              \
+        object.insert({k, _encode(v)});                                        \
+        return this;                                                           \
+    }                                                                          \
+    inline JSON* Add(const std::string& k, std::vector<T> v) {                 \
+        std::string a = "[";                                                   \
+        for (T l : v) a += _encode(l) + ",";                                   \
+        a.pop_back();                                                          \
+        object.insert({k, a + "]"});                                           \
+        return this;                                                           \
     }
 
 class JSON {
@@ -65,12 +62,14 @@ class JSON {
     }
 
   public:
-    template<typename T, typename std::enable_if<std::is_base_of<JSONNode, T>::value>::type* = nullptr>
+    template<typename T, typename std::enable_if<std::is_base_of<
+                                 JSONNode, T>::value>::type* = nullptr>
     inline JSON* Add(const std::string& k, JSONNode* v) {
         object.insert({k, _encode(v)});
         return this;
     }
-    template<typename T, typename std::enable_if<std::is_base_of<JSONNode, T>::value>::type* = nullptr>
+    template<typename T, typename std::enable_if<std::is_base_of<
+                                 JSONNode, T>::value>::type* = nullptr>
     inline JSON* Add(const std::string& k, std::vector<T*> v) {
         std::string a = "[";
         for (T* l : v) a += _encode(l) + ",";
@@ -106,9 +105,11 @@ class JSON {
 // Nah, these are even more evil!
 #define JSON_DECL JSON* ToJSON(void) override;
 #define JSON_VIRTUAL virtual JSON* ToJSON(void) override;
-#define JSON_IMPL(T, S)                                                                            \
-    JSON* T::ToJSON(void) {                                                                        \
-        return JSON::Node(#T) S;                                                                   \
+#define JSON_IMPL(T, S)                                                        \
+    JSON* T::ToJSON(void) {                                                    \
+        return JSON::Node(#T) S;                                               \
     }
+
+}
 
 #endif

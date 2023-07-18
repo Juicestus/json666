@@ -1,3 +1,5 @@
+EVIL JSON EMITTER (json666)
+
 Single header file JSON emitter library, designed to
 be used as a Git submodule. This code is super evil! 
 This should be inside SatanLib because it's so evil!
