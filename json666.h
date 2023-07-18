@@ -11,7 +11,7 @@
 // better and even more evil! Reference for the future.
 // http://coliru.stacked-crooked.com/a/a5902693e51b59b9
 
-#ifndef __JSON_666_H__ 
+#ifndef __JSON_666_H__
 #define __JSON_666_H__
 
 #include <algorithm>
@@ -29,23 +29,23 @@ class JSONNode {
     virtual JSON* ToJSON(void) = 0;
 };
 
-#define __REGISTER_ADD_FUNC(T, E)                                              \
-  private:                                                                     \
-    inline std::string _encode(T x) {                                          \
-        return E;                                                              \
-    }                                                                          \
-                                                                               \
-  public:                                                                      \
-    inline JSON* Add(const std::string& k, T v) {                              \
-        object.insert({k, _encode(v)});                                        \
-        return this;                                                           \
-    }                                                                          \
-    inline JSON* Add(const std::string& k, std::vector<T> v) {                 \
-        std::string a = "[";                                                   \
-        for (T l : v) a += _encode(l) + ",";                                   \
-        a.pop_back();                                                          \
-        object.insert({k, a + "]"});                                           \
-        return this;                                                           \
+#define __REGISTER_ADD_FUNC(T, E)                                                                  \
+  private:                                                                                         \
+    inline std::string _encode(T x) {                                                              \
+        return E;                                                                                  \
+    }                                                                                              \
+                                                                                                   \
+  public:                                                                                          \
+    inline JSON* Add(const std::string& k, T v) {                                                  \
+        object.insert({k, _encode(v)});                                                            \
+        return this;                                                                               \
+    }                                                                                              \
+    inline JSON* Add(const std::string& k, std::vector<T> v) {                                     \
+        std::string a = "[";                                                                       \
+        for (T l : v) a += _encode(l) + ",";                                                       \
+        a.pop_back();                                                                              \
+        object.insert({k, a + "]"});                                                               \
+        return this;                                                                               \
     }
 
 class JSON {
@@ -62,14 +62,14 @@ class JSON {
     }
 
   public:
-    template<typename T, typename std::enable_if<std::is_base_of<
-                                 JSONNode, T>::value>::type* = nullptr>
+    template<typename T,
+             typename std::enable_if<std::is_base_of<JSONNode, T>::value>::type* = nullptr>
     inline JSON* Add(const std::string& k, JSONNode* v) {
         object.insert({k, _encode(v)});
         return this;
     }
-    template<typename T, typename std::enable_if<std::is_base_of<
-                                 JSONNode, T>::value>::type* = nullptr>
+    template<typename T,
+             typename std::enable_if<std::is_base_of<JSONNode, T>::value>::type* = nullptr>
     inline JSON* Add(const std::string& k, std::vector<T*> v) {
         std::string a = "[";
         for (T* l : v) a += _encode(l) + ",";
@@ -99,17 +99,16 @@ class JSON {
     std::map<std::string, std::string> object;
 };
 
+#endif
+
 // Evil macro! This is as evil as macros get.
 #define FIELD(var_name) Add(#var_name, var_name)
 
 // Nah, these are even more evil!
-#define JSON_DECL JSON* ToJSON(void) override;
-#define JSON_VIRTUAL virtual JSON* ToJSON(void) override;
-#define JSON_IMPL(T, S)                                                        \
-    JSON* T::ToJSON(void) {                                                    \
-        return JSON::Node(#T) S;                                               \
+#define JSON_DECL JSON666::JSON* ToJSON(void) override;
+#define JSON_VIRTUAL virtual JSON666::JSON* ToJSON(void) override;
+#define JSON_IMPL(T, S)                                                                            \
+    JSON666::JSON* T::ToJSON(void) {                                                               \
+        return JSON666::JSON::Node(#T) S;                                                          \
     }
-
 }
-
-#endif
